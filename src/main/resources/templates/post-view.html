@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${post.title}">Post Title</title>
     <!-- Google Fonts -->
@@ -58,6 +59,12 @@
                     </div>
                 </div>
 
+                <!-- Display photo if available -->
+                <div class="blog-post-photo mt-4 mb-4" th:if="${post.photoPath != null}">
+                    <img th:src="@{'/posts/uploads/' + ${post.photoPath}}" alt="Post image" 
+                         class="img-fluid rounded shadow-sm" style="max-width: 100%;">
+                </div>
+
                 <div class="blog-post-content mt-4 p-4 bg-white rounded shadow-sm">
                     <p th:text="${post.content}" class="lead">Post content goes here...</p>
                 </div>
@@ -87,22 +94,18 @@
                 <div class="card mb-4 fade-in">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add a Comment</h5>
+                        <small class="text-muted" sec:authorize="isAuthenticated()">
+                            <i class="fas fa-info-circle me-1"></i> Your comment will be posted as <span sec:authentication="name"></span>
+                        </small>
+                        <div class="alert alert-warning mt-2" sec:authorize="!isAuthenticated()">
+                            <i class="fas fa-exclamation-triangle me-1"></i> You must be <a th:href="@{/login}">logged in</a> to post a comment.
+                        </div>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/comments/add}" method="post" th:object="${newComment}">
+                        <form th:action="@{/comments/add}" method="post" th:object="${newComment}" sec:authorize="isAuthenticated()">
                             <input type="hidden" name="postId" th:value="${post.id}" />
 
-                            <div class="mb-3">
-                                <label for="userId" class="form-label">
-                                    <i class="fas fa-user me-1"></i> Select User
-                                </label>
-                                <select class="form-select" id="userId" name="userId" required>
-                                    <option value="">-- Select User --</option>
-                                    <!-- In a real app, you would populate this from a list of users -->
-                                    <option value="1">User 1</option>
-                                    <option value="2">User 2</option>
-                                </select>
-                            </div>
+                            <!-- User selection removed - comments are now automatically associated with the logged-in user -->
 
                             <div class="mb-3">
                                 <label for="content" class="form-label">

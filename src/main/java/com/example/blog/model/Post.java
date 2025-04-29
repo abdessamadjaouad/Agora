@@ -15,27 +15,30 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false, length = 100)
     private String title;
-    
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-    
+
+    @Column
+    private String photoPath;
+
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Column
     private LocalDateTime updatedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
-    
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }

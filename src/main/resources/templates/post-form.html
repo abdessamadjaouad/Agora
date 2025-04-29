@@ -48,21 +48,12 @@
                         </div>
                         <div class="card-body">
                             <form th:action="@{${post.id == null ? '/posts/new' : '/posts/' + post.id + '/edit'}}" 
-                                  method="post" th:object="${post}">
+                                  method="post" th:object="${post}" enctype="multipart/form-data">
 
                                 <!-- If editing, we already have the post ID -->
                                 <input type="hidden" th:if="${post.id != null}" th:field="*{id}" />
 
-                                <!-- For new posts, we need to select the author -->
-                                <div class="mb-3" th:if="${post.id == null}">
-                                    <label for="userId" class="form-label">Author</label>
-                                    <select class="form-select" id="userId" name="userId" required>
-                                        <option value="">-- Select Author --</option>
-                                        <!-- In a real app, you would populate this from a list of users -->
-                                        <option value="1">User 1</option>
-                                        <option value="2">User 2</option>
-                                    </select>
-                                </div>
+                                <!-- Author is automatically set to the current authenticated user -->
 
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Title</label>
@@ -74,6 +65,16 @@
                                     <label for="content" class="form-label">Content</label>
                                     <textarea class="form-control" id="content" th:field="*{content}" 
                                               rows="10" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="photo" class="form-label">Photo</label>
+                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                                    <div class="form-text" th:if="${post.photoPath != null}">
+                                        Current photo: <span th:text="${post.photoPath}"></span>
+                                        <img th:if="${post.photoPath != null}" th:src="@{'/posts/uploads/' + ${post.photoPath}}" 
+                                             alt="Current photo" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                    </div>
                                 </div>
 
                                 <div class="d-flex justify-content-between">

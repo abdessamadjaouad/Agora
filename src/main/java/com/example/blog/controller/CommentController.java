@@ -30,17 +30,27 @@ public class CommentController {
 
     @PostMapping("/add")
     public String addComment(@ModelAttribute Comment comment, 
-                            @RequestParam Long postId, 
-                            @RequestParam Long userId,
-                            RedirectAttributes redirectAttributes) {
-        
+                            @RequestParam Long postId,
+                            RedirectAttributes redirectAttributes,
+                            java.security.Principal principal) {
+
+        // Check if user is authenticated
+        if (principal == null) {
+            redirectAttributes.addFlashAttribute("error", "You must be logged in to post comments");
+            return "redirect:/posts/" + postId;
+        }
+
         Optional<Post> postOpt = postService.findPostById(postId);
-        Optional<User> userOpt = userService.findUserById(userId);
-        
+
+        // Get the currently authenticated user
+        String username = principal.getName();
+        Optional<User> userOpt = userService.findUserByEmail(username);
+
         if (postOpt.isPresent() && userOpt.isPresent()) {
             comment.setPost(postOpt.get());
             comment.setUser(userOpt.get());
             commentService.saveComment(comment);
+            redirectAttributes.addFlashAttribute("success", "Comment added successfully");
             return "redirect:/posts/" + postId;
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to add comment");

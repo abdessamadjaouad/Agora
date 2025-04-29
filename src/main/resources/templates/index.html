@@ -57,19 +57,29 @@
                     </div>
 
                     <div th:each="post, iterStat : ${posts}" class="blog-post fade-in" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'">
-                        <h2 class="blog-post-title">
-                            <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
-                        </h2>
-                        <p class="blog-post-meta">
-                            <i class="far fa-calendar-alt me-1"></i>
-                            <span th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">01 January 2023</span> 
-                            <i class="fas fa-user ms-3 me-1"></i>
-                            <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" th:text="${post.author.name}">Author</a>
-                        </p>
-                        <p th:text="${#strings.abbreviate(post.content, 300)}">Post content...</p>
-                        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-primary btn-sm">
-                            Read More <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
+                        <div class="row">
+                            <div th:if="${post.photoPath != null}" class="col-md-3 mb-3">
+                                <a th:href="@{/posts/{id}(id=${post.id})}">
+                                    <img th:src="@{'/posts/uploads/' + ${post.photoPath}}" alt="Post thumbnail" 
+                                         class="img-fluid rounded shadow-sm" style="max-height: 150px; object-fit: cover;">
+                                </a>
+                            </div>
+                            <div th:class="${post.photoPath != null} ? 'col-md-9' : 'col-md-12'">
+                                <h2 class="blog-post-title">
+                                    <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
+                                </h2>
+                                <p class="blog-post-meta">
+                                    <i class="far fa-calendar-alt me-1"></i>
+                                    <span th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">01 January 2023</span> 
+                                    <i class="fas fa-user ms-3 me-1"></i>
+                                    <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" th:text="${post.author.name}">Author</a>
+                                </p>
+                                <p th:text="${#strings.abbreviate(post.content, 300)}">Post content...</p>
+                                <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-primary btn-sm">
+                                    Read More <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Pagination -->

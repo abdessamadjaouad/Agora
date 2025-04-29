@@ -53,18 +53,24 @@
                                     <input type="text" class="form-control" id="name" th:field="*{name}" 
                                            required maxlength="50">
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" th:field="*{email}" 
                                            required maxlength="100">
                                 </div>
-                                
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" th:field="*{password}" 
+                                           required minlength="6">
+                                </div>
+
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="isAdmin" th:field="*{admin}">
                                     <label class="form-check-label" for="isAdmin">Register as Admin</label>
                                 </div>
-                                
+
                                 <div class="d-flex justify-content-between">
                                     <a th:href="@{/}" class="btn btn-outline-secondary">Cancel</a>
                                     <button type="submit" class="btn btn-primary">Register</button>
