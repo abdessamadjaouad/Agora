@@ -14,146 +14,204 @@
     <!-- Alternative CSS inclusion method -->
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
     <style>
-        /* Inline critical CSS to ensure basic styling works */
+        /* Inline critical CSS to ensure basic styling works - Reddit-like with blue theme */
         body {
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-            color: #333;
+            font-family: 'IBM Plex Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            color: #1c1c1c;
             line-height: 1.6;
-            padding-top: 70px;
-            background-color: #f9f9f9;
+            padding-top: 48px;
+            background-color: #dae0e6;
         }
         .navbar {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(to right, #2c3e50, #3498db);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #0079d3;
+            height: 48px;
         }
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
         }
         .navbar-dark .navbar-nav .nav-link:hover {
             color: #fff;
         }
         footer {
-            background-color: #2c3e50;
-            color: #fff;
+            background-color: #0079d3;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <!-- Google Font for Reddit-like style -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{layout :: body(title=~{::title}, content=~{::content})}">
         <div th:fragment="content">
-            <!-- Post Content -->
-            <div class="blog-post fade-in">
-                <h1 class="blog-post-title" th:text="${post.title}">Post Title</h1>
-                <div class="blog-post-meta d-flex align-items-center mb-4">
-                    <div class="me-4">
-                        <i class="far fa-calendar-alt me-1 text-primary"></i>
-                        <span th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">01 January 2023</span>
-                    </div>
-                    <div class="me-4">
-                        <i class="fas fa-user me-1 text-primary"></i>
-                        <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" th:text="${post.author.name}">Author</a>
-                    </div>
-                    <div th:if="${post.updatedAt != null}">
-                        <i class="fas fa-edit me-1 text-primary"></i>
-                        <span th:text="${#temporals.format(post.updatedAt, 'dd MMMM yyyy')}">01 January 2023</span>
-                    </div>
+            <!-- Post Content - Reddit-like -->
+            <div class="blog-post fade-in position-relative">
+                <!-- Reddit-like vote buttons (visual only) -->
+                <div class="vote-buttons" style="position: absolute; left: -40px; top: 10px; display: flex; flex-direction: column; align-items: center; width: 40px;">
+                    <button class="btn btn-sm vote-up" style="background: none; border: none; color: #878A8C; padding: 0;">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <span style="font-size: 12px; font-weight: 700; color: #1A1A1B; margin: 4px 0;">•</span>
+                    <button class="btn btn-sm vote-down" style="background: none; border: none; color: #878A8C; padding: 0;">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
                 </div>
+
+                <!-- Post metadata - Reddit style -->
+                <div class="blog-post-meta mb-2" style="font-size: 12px; color: #787C7E;">
+                    <span>Posted by</span>
+                    <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" style="color: #0079D3; text-decoration: none;">
+                        u/<span th:text="${post.author.name}">Author</span>
+                    </a>
+                    <span th:text="' • ' + ${#temporals.format(post.createdAt, 'dd MMM yyyy')}"> • 01 Jan 2023</span>
+                    <span th:if="${post.updatedAt != null}" th:text="' • edited ' + ${#temporals.format(post.updatedAt, 'dd MMM yyyy')}"> • edited 01 Jan 2023</span>
+                </div>
+
+                <h1 class="blog-post-title" th:text="${post.title}" style="font-size: 20px; font-weight: 500; margin-bottom: 12px;">Post Title</h1>
 
                 <!-- Display photo if available -->
-                <div class="blog-post-photo mt-4 mb-4" th:if="${post.photoPath != null}">
+                <div class="blog-post-photo mb-3" th:if="${post.photoPath != null}">
                     <img th:src="@{'/posts/uploads/' + ${post.photoPath}}" alt="Post image" 
-                         class="img-fluid rounded shadow-sm" style="max-width: 100%;">
+                         class="img-fluid rounded" style="max-width: 100%;">
                 </div>
 
-                <div class="blog-post-content mt-4 p-4 bg-white rounded shadow-sm">
-                    <p th:text="${post.content}" class="lead">Post content goes here...</p>
+                <div class="blog-post-content p-0">
+                    <p th:text="${post.content}" style="font-size: 14px; line-height: 1.5;">Post content goes here...</p>
                 </div>
 
-                <div class="mt-4 d-flex gap-2">
-                    <a th:href="@{/}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i> Back to Home
+                <!-- Post actions - Reddit style -->
+                <div class="post-actions" style="display: flex; gap: 15px; margin-top: 8px; border-top: 1px solid #EDEFF1; padding-top: 8px;">
+                    <a href="#comments" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                        <i class="far fa-comment-alt me-1"></i> Comments
                     </a>
-                    <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn btn-primary">
-                        <i class="fas fa-edit me-1"></i> Edit Post
+                    <a href="#" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                        <i class="fas fa-share me-1"></i> Share
                     </a>
-                    <a th:href="@{/posts/{id}/delete(id=${post.id})}" class="btn btn-danger" 
-                       onclick="return confirm('Are you sure you want to delete this post?')">
-                        <i class="fas fa-trash-alt me-1"></i> Delete Post
+                    <a href="#" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                        <i class="far fa-bookmark me-1"></i> Save
                     </a>
+                    <div class="ms-auto">
+                        <a th:href="@{/}" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                        <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </a>
+                        <a th:href="@{/posts/{id}/delete(id=${post.id})}" class="btn btn-sm" 
+                           style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;"
+                           onclick="return confirm('Are you sure you want to delete this post?')">
+                            <i class="fas fa-trash-alt me-1"></i> Delete
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Comments Section -->
-            <div class="mt-5">
-                <div class="d-flex align-items-center mb-4">
-                    <i class="fas fa-comments text-primary me-2 fa-lg"></i>
-                    <h3 class="mb-0">Comments (<span th:text="${#lists.size(comments)}">0</span>)</h3>
+            <!-- Comments Section - Reddit-like -->
+            <div class="mt-4" id="comments">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="mb-0" style="font-size: 16px; font-weight: 500; color: #1c1c1c;">
+                        <i class="fas fa-comments me-2" style="color: #0079d3;"></i>
+                        Comments (<span th:text="${#lists.size(comments)}">0</span>)
+                    </h3>
                 </div>
 
-                <!-- Add Comment Form -->
-                <div class="card mb-4 fade-in">
+                <!-- Add Comment Form - Reddit-like -->
+                <div class="card mb-3 fade-in">
                     <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add a Comment</h5>
-                        <small class="text-muted" sec:authorize="isAuthenticated()">
-                            <i class="fas fa-info-circle me-1"></i> Your comment will be posted as <span sec:authentication="name"></span>
-                        </small>
-                        <div class="alert alert-warning mt-2" sec:authorize="!isAuthenticated()">
-                            <i class="fas fa-exclamation-triangle me-1"></i> You must be <a th:href="@{/login}">logged in</a> to post a comment.
+                        <h5 class="mb-0" style="font-size: 14px; font-weight: 500;">Comment as <span sec:authentication="name" style="color: #0079d3;"></span></h5>
+                        <div class="alert alert-warning mt-2 p-2" sec:authorize="!isAuthenticated()" style="font-size: 12px;">
+                            <i class="fas fa-exclamation-triangle me-1"></i> You must be <a th:href="@{/login}" style="color: #0079d3;">logged in</a> to post a comment.
                         </div>
                     </div>
                     <div class="card-body">
                         <form th:action="@{/comments/add}" method="post" th:object="${newComment}" sec:authorize="isAuthenticated()">
                             <input type="hidden" name="postId" th:value="${post.id}" />
 
-                            <!-- User selection removed - comments are now automatically associated with the logged-in user -->
-
                             <div class="mb-3">
-                                <label for="content" class="form-label">
-                                    <i class="fas fa-comment me-1"></i> Your Comment
-                                </label>
                                 <textarea class="form-control" id="content" name="content" rows="3" 
-                                          th:field="*{content}" required placeholder="Share your thoughts..."></textarea>
+                                          th:field="*{content}" required placeholder="What are your thoughts?" 
+                                          style="font-size: 14px; border-radius: 4px; border: 1px solid #edeff1;"></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane me-1"></i> Submit Comment
-                            </button>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary" style="font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 16px;">
+                                    Comment
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Comments List -->
-                <div th:if="${#lists.isEmpty(comments)}" class="alert alert-info custom-alert">
+                <!-- Sort options - Reddit-like -->
+                <div class="d-flex align-items-center mb-2" style="font-size: 12px; color: #878A8C;">
+                    <span class="me-2">Sort by:</span>
+                    <div class="dropdown">
+                        <button class="btn btn-sm dropdown-toggle p-0" type="button" style="background: none; color: #0079d3; font-size: 12px; font-weight: 500;" data-bs-toggle="dropdown">
+                            Best
+                        </button>
+                        <ul class="dropdown-menu" style="font-size: 12px;">
+                            <li><a class="dropdown-item" href="#">Best</a></li>
+                            <li><a class="dropdown-item" href="#">Top</a></li>
+                            <li><a class="dropdown-item" href="#">New</a></li>
+                            <li><a class="dropdown-item" href="#">Controversial</a></li>
+                            <li><a class="dropdown-item" href="#">Old</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Comments List - Reddit-like -->
+                <div th:if="${#lists.isEmpty(comments)}" class="alert alert-info custom-alert" style="font-size: 14px; background-color: white; border-radius: 4px;">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-info-circle me-2 fa-lg"></i>
+                        <i class="fas fa-info-circle me-2"></i>
                         <p class="mb-0">No comments yet. Be the first to comment!</p>
                     </div>
                 </div>
 
                 <div th:each="comment, iterStat : ${comments}" class="comment fade-in" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5>
-                                <i class="fas fa-user-circle me-2 text-primary"></i>
-                                <span th:text="${comment.user.name}">User Name</span>
-                            </h5>
-                            <p class="comment-meta">
-                                <i class="far fa-clock me-1"></i>
-                                <span th:text="${#temporals.format(comment.createdAt, 'dd MMMM yyyy HH:mm')}">
-                                    01 January 2023 12:00
-                                </span>
-                            </p>
+                    <!-- Comment vote buttons (visual only) -->
+                    <div class="vote-buttons" style="position: absolute; left: -30px; display: flex; flex-direction: column; align-items: center; width: 20px;">
+                        <button class="btn btn-sm vote-up" style="background: none; border: none; color: #878A8C; padding: 0; font-size: 10px;">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <span style="font-size: 10px; font-weight: 700; color: #1A1A1B; margin: 2px 0;">•</span>
+                        <button class="btn btn-sm vote-down" style="background: none; border: none; color: #878A8C; padding: 0; font-size: 10px;">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </div>
+
+                    <div class="position-relative">
+                        <div class="d-flex align-items-center">
+                            <a th:href="@{/users/dashboard/{id}(id=${comment.user.id})}" style="color: #0079D3; font-size: 12px; font-weight: 500; text-decoration: none;">
+                                u/<span th:text="${comment.user.name}">User Name</span>
+                            </a>
+                            <span style="color: #787C7E; font-size: 12px; margin-left: 5px;">
+                                <span th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy')}">01 Jan 2023</span>
+                            </span>
+                            <div class="ms-auto">
+                                <a th:href="@{/comments/{id}/delete(id=${comment.id}, postId=${post.id})}" 
+                                   class="btn btn-sm"
+                                   style="background: none; color: #878A8C; font-size: 12px; padding: 0;"
+                                   onclick="return confirm('Are you sure you want to delete this comment?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div>
-                            <a th:href="@{/comments/{id}/delete(id=${comment.id}, postId=${post.id})}" 
-                               class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('Are you sure you want to delete this comment?')">
-                                <i class="fas fa-trash-alt me-1"></i> Delete
+                        <div class="mt-1" style="font-size: 14px; color: #1c1c1c; margin-left: 0;">
+                            <p th:text="${comment.content}" style="margin-bottom: 4px;">Comment content goes here...</p>
+                        </div>
+                        <div class="comment-actions" style="display: flex; gap: 10px; margin-top: 4px;">
+                            <a href="#" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 0;">
+                                Reply
+                            </a>
+                            <a href="#" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 0;">
+                                Share
+                            </a>
+                            <a href="#" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 0;">
+                                Report
                             </a>
                         </div>
-                    </div>
-                    <div class="comment-content mt-2">
-                        <p th:text="${comment.content}">Comment content goes here...</p>
                     </div>
                 </div>
             </div>

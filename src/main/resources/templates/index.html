@@ -13,29 +13,34 @@
     <!-- Alternative CSS inclusion method -->
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
     <style>
-        /* Inline critical CSS to ensure basic styling works */
+        /* Inline critical CSS to ensure basic styling works - Reddit-like with blue theme */
         body {
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-            color: #333;
+            font-family: 'IBM Plex Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            color: #1c1c1c;
             line-height: 1.6;
-            padding-top: 70px;
-            background-color: #f9f9f9;
+            padding-top: 48px;
+            background-color: #dae0e6;
         }
         .navbar {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(to right, #2c3e50, #3498db);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #0079d3;
+            height: 48px;
         }
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
         }
         .navbar-dark .navbar-nav .nav-link:hover {
             color: #fff;
         }
         footer {
-            background-color: #2c3e50;
-            color: #fff;
+            background-color: #0079d3;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <!-- Google Font for Reddit-like style -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{layout :: body(title=~{::title}, content=~{::content})}">
@@ -43,7 +48,7 @@
             <div class="blog-header">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="display-4">Blog Posts</h1>
+                        <h1 class="display-4">r/Agora</h1>
                         <p class="lead">Welcome to Agora. Read the latest posts or create your own.</p>
                     </div>
                 </div>
@@ -57,27 +62,47 @@
                     </div>
 
                     <div th:each="post, iterStat : ${posts}" class="blog-post fade-in" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'">
+                        <!-- Reddit-like vote buttons (visual only) -->
+                        <div class="vote-buttons" style="position: absolute; left: -40px; top: 10px; display: flex; flex-direction: column; align-items: center; width: 40px;">
+                            <button class="btn btn-sm vote-up" style="background: none; border: none; color: #878A8C; padding: 0;">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <span style="font-size: 12px; font-weight: 700; color: #1A1A1B; margin: 4px 0;">•</span>
+                            <button class="btn btn-sm vote-down" style="background: none; border: none; color: #878A8C; padding: 0;">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+
                         <div class="row">
-                            <div th:if="${post.photoPath != null}" class="col-md-3 mb-3">
+                            <div th:if="${post.photoPath != null}" class="col-md-3 mb-2">
                                 <a th:href="@{/posts/{id}(id=${post.id})}">
                                     <img th:src="@{'/posts/uploads/' + ${post.photoPath}}" alt="Post thumbnail" 
-                                         class="img-fluid rounded shadow-sm" style="max-height: 150px; object-fit: cover;">
+                                         class="img-fluid rounded" style="max-height: 120px; object-fit: cover;">
                                 </a>
                             </div>
                             <div th:class="${post.photoPath != null} ? 'col-md-9' : 'col-md-12'">
+                                <p class="blog-post-meta mb-1">
+                                    <span style="color: #787C7E; font-size: 12px;">Posted by</span>
+                                    <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" style="color: #0079D3; font-size: 12px; text-decoration: none;">
+                                        u/<span th:text="${post.author.name}">Author</span>
+                                    </a>
+                                    <span style="color: #787C7E; font-size: 12px;" th:text="' • ' + ${#temporals.format(post.createdAt, 'dd MMM yyyy')}"> • 01 Jan 2023</span>
+                                </p>
                                 <h2 class="blog-post-title">
                                     <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
                                 </h2>
-                                <p class="blog-post-meta">
-                                    <i class="far fa-calendar-alt me-1"></i>
-                                    <span th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">01 January 2023</span> 
-                                    <i class="fas fa-user ms-3 me-1"></i>
-                                    <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" th:text="${post.author.name}">Author</a>
-                                </p>
-                                <p th:text="${#strings.abbreviate(post.content, 300)}">Post content...</p>
-                                <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-primary btn-sm">
-                                    Read More <i class="fas fa-arrow-right ms-1"></i>
-                                </a>
+                                <p th:text="${#strings.abbreviate(post.content, 200)}" style="font-size: 14px; color: #1c1c1c;">Post content...</p>
+                                <div class="post-actions" style="display: flex; gap: 15px; margin-top: 8px;">
+                                    <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                                        <i class="far fa-comment-alt me-1"></i> Comments
+                                    </a>
+                                    <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                                        <i class="fas fa-share me-1"></i> Share
+                                    </a>
+                                    <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-sm" style="background: none; color: #878A8C; font-size: 12px; padding: 4px 8px; border-radius: 2px;">
+                                        <i class="far fa-bookmark me-1"></i> Save
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,22 +129,51 @@
                 </div>
 
                 <div class="col-md-4">
+                    <!-- Reddit-like sidebar -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">About r/Agora</h5>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size: 14px;">A community for sharing thoughts, ideas, and discussions on various topics. Join us and be part of the conversation!</p>
+                            <p style="font-size: 12px; color: #7c7c7c;"><i class="fas fa-birthday-cake me-2"></i>Created Jan 1, 2023</p>
+                            <hr>
+                            <a th:href="@{/posts/new}" class="btn btn-primary w-100 mb-2" style="background-color: #0079d3; border: none;">Create Post</a>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">r/Agora Rules</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item" style="font-size: 14px;">
+                                    <span style="font-weight: 500;">1. Be respectful</span>
+                                </div>
+                                <div class="list-group-item" style="font-size: 14px;">
+                                    <span style="font-weight: 500;">2. No spam</span>
+                                </div>
+                                <div class="list-group-item" style="font-size: 14px;">
+                                    <span style="font-weight: 500;">3. No personal information</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">Quick Links</h5>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <a th:href="@{/posts/new}" class="btn btn-success w-100">Create New Post</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a th:href="@{/users/register}" class="btn btn-outline-primary w-100">Register</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a th:href="@{/users/admin}" class="btn btn-outline-secondary w-100">Admin Dashboard</a>
-                                </li>
-                            </ul>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <a th:href="@{/users/register}" class="list-group-item list-group-item-action" style="font-size: 14px;">
+                                    <i class="fas fa-user-plus me-2"></i> Register
+                                </a>
+                                <a th:href="@{/users/admin}" class="list-group-item list-group-item-action" style="font-size: 14px;">
+                                    <i class="fas fa-user-shield me-2"></i> Admin Dashboard
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

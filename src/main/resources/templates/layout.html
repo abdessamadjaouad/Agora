@@ -16,29 +16,34 @@
     <!-- Alternative CSS inclusion method -->
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
     <style>
-        /* Inline critical CSS to ensure basic styling works */
+        /* Inline critical CSS to ensure basic styling works - Reddit-like with blue theme */
         body {
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-            color: #333;
+            font-family: 'IBM Plex Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            color: #1c1c1c;
             line-height: 1.6;
-            padding-top: 70px;
-            background-color: #f9f9f9;
+            padding-top: 48px;
+            background-color: #dae0e6;
         }
         .navbar {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(to right, #2c3e50, #3498db);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #0079d3;
+            height: 48px;
         }
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
         }
         .navbar-dark .navbar-nav .nav-link:hover {
             color: #fff;
         }
         footer {
-            background-color: #2c3e50;
-            color: #fff;
+            background-color: #0079d3;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <!-- Google Font for Reddit-like style -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->

@@ -1,27 +1,32 @@
-/* Custom Styles for Blog Application */
+/* Custom Styles for Blog Application - Reddit-like with Blue Theme */
 
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2c3e50;
-  --accent-color: #e74c3c;
-  --light-color: #ecf0f1;
-  --dark-color: #2c3e50;
-  --success-color: #2ecc71;
+  --primary-color: #0079d3; /* Reddit blue */
+  --secondary-color: #1a4c6e; /* Darker blue */
+  --accent-color: #ff4500; /* Reddit orange for accents */
+  --light-color: #f8f9fa; /* Light background */
+  --dark-color: #1a4c6e; /* Darker blue */
+  --success-color: #46d160; /* Reddit green */
   --warning-color: #f39c12;
-  --danger-color: #e74c3c;
-  --text-color: #333;
-  --text-muted: #7f8c8d;
-  --border-color: #ddd;
-  --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --danger-color: #ea0027; /* Reddit red */
+  --text-color: #1c1c1c; /* Reddit text color */
+  --text-muted: #7c7c7c; /* Reddit muted text */
+  --border-color: #ccc; /* Reddit border color */
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  --post-background: #ffffff; /* White background for posts */
+  --body-background: #dae0e6; /* Reddit light gray background */
+  --upvote-color: #ff4500; /* Reddit upvote color */
+  --downvote-color: #7193ff; /* Reddit downvote color */
+  --header-height: 48px; /* Reddit header height */
 }
 
 /* General Styles */
 body {
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-family: 'IBM Plex Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
   color: var(--text-color);
   line-height: 1.6;
-  padding-top: 70px;
-  background-color: #f9f9f9;
+  padding-top: var(--header-height);
+  background-color: var(--body-background);
 }
 
 a {
@@ -54,23 +59,26 @@ a:hover {
   border-color: #c0392b;
 }
 
-/* Navigation */
+/* Navigation - Reddit-like */
 .navbar {
   box-shadow: var(--box-shadow);
-  background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+  background-color: var(--primary-color);
+  height: var(--header-height);
 }
 
 .navbar-brand {
   font-weight: 700;
   font-size: 1.5rem;
+  color: white;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
@@ -78,46 +86,73 @@ a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Blog Header */
+/* Blog Header - Reddit-like */
 .blog-header {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2rem;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  background-color: var(--post-background);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
 }
 
 .blog-header h1 {
-  color: var(--secondary-color);
-  font-weight: 700;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .blog-header .lead {
   color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 0;
 }
 
-/* Blog Posts */
+/* Blog Posts - Reddit-like */
 .blog-post {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 2rem;
-  background-color: white;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  background-color: var(--post-background);
   box-shadow: var(--box-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .blog-post:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-color: #898989;
+}
+
+/* Add voting buttons styling (visual only) */
+.blog-post::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 8px;
 }
 
 .blog-post-title {
-  margin-bottom: 1rem;
-  color: var(--secondary-color);
-  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.3;
 }
 
 .blog-post-title a {
-  color: var(--secondary-color);
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 .blog-post-title a:hover {
@@ -125,27 +160,27 @@ a:hover {
 }
 
 .blog-post-meta {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5rem;
+  font-size: 0.75rem;
+  padding-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
 }
 
-/* Comments */
+/* Comments - Reddit-like */
 .comment {
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  border-radius: 4px;
+  background-color: var(--post-background);
   box-shadow: var(--box-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .comment:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-color: #898989;
 }
 
 .comment h5 {
@@ -184,31 +219,35 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* Forms and Cards */
+/* Forms and Cards - Reddit-like */
 .card {
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: var(--box-shadow);
-  border: none;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  transition: border-color 0.2s ease;
   overflow: hidden;
+  background-color: var(--post-background);
 }
 
 .card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-color: #898989;
 }
 
 .card-header {
-  background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+  background-color: var(--primary-color);
   color: white;
   border-bottom: none;
-  padding: 1.25rem 1.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .card-header h3, .card-header h5 {
   margin-bottom: 0;
   color: white;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .card-body {
@@ -265,23 +304,33 @@ a:hover {
   transform-origin: bottom left;
 }
 
-/* Pagination */
+/* Pagination - Reddit-like */
 .pagination .page-link {
   color: var(--primary-color);
   border: 1px solid var(--border-color);
+  background-color: var(--post-background);
+  font-size: 14px;
 }
 
 .pagination .page-item.active .page-link {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
+  color: white;
 }
 
-/* Footer */
+.pagination .page-link:hover {
+  background-color: #e9f5ff;
+  border-color: var(--primary-color);
+}
+
+/* Footer - Reddit-like */
 footer {
-  background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+  background-color: var(--primary-color);
   color: white;
-  padding: 3rem 0;
-  margin-top: 3rem;
+  padding: 2rem 0;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
 }
 
 footer h5 {
@@ -289,6 +338,7 @@ footer h5 {
   margin-bottom: 1rem;
   position: relative;
   padding-bottom: 10px;
+  color: white;
 }
 
 footer h5::after {
