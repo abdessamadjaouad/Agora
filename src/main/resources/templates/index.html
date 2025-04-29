@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blog Home</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <!-- Alternative CSS inclusion method -->
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <style>
+        /* Inline critical CSS to ensure basic styling works */
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 70px;
+            background-color: #f9f9f9;
+        }
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to right, #2c3e50, #3498db);
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{layout :: body(title=~{::title}, content=~{::content})}">
+        <div th:fragment="content">
+            <div class="blog-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="display-4">Blog Posts</h1>
+                        <p class="lead">Welcome to our blog application. Read the latest posts or create your own.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <!-- Blog Posts -->
+                    <div th:if="${#lists.isEmpty(posts)}" class="alert alert-info">
+                        <p>No posts available. Be the first to create a post!</p>
+                    </div>
+
+                    <div th:each="post, iterStat : ${posts}" class="blog-post fade-in" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'">
+                        <h2 class="blog-post-title">
+                            <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
+                        </h2>
+                        <p class="blog-post-meta">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            <span th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">01 January 2023</span> 
+                            <i class="fas fa-user ms-3 me-1"></i>
+                            <a th:href="@{/users/dashboard/{id}(id=${post.author.id})}" th:text="${post.author.name}">Author</a>
+                        </p>
+                        <p th:text="${#strings.abbreviate(post.content, 300)}">Post content...</p>
+                        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-primary btn-sm">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav th:if="${totalPages > 1}" aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                                <a class="page-link" th:href="@{/(page=${currentPage - 1})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                                th:classappend="${currentPage == i} ? 'active' : ''">
+                                <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                                <a class="page-link" th:href="@{/(page=${currentPage + 1})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Quick Links</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a th:href="@{/posts/new}" class="btn btn-success w-100">Create New Post</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a th:href="@{/users/register}" class="btn btn-outline-primary w-100">Register</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a th:href="@{/users/admin}" class="btn btn-outline-secondary w-100">Admin Dashboard</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
