@@ -1,5 +1,6 @@
 package com.example.blog.controller;
 
+import com.example.blog.model.Post;
 import com.example.blog.model.User;
 import com.example.blog.service.CommentService;
 import com.example.blog.service.PostService;
@@ -40,7 +41,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "Email already exists");
             return "redirect:/users/register";
         }
-        
+
         userService.saveUser(user);
         redirectAttributes.addFlashAttribute("success", "Registration successful");
         return "redirect:/users/dashboard/" + user.getId();
@@ -49,7 +50,7 @@ public class UserController {
     @GetMapping("/dashboard/{id}")
     public String userDashboard(@PathVariable Long id, Model model) {
         Optional<User> userOpt = userService.findUserById(id);
-        
+
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             model.addAttribute("user", user);
@@ -65,14 +66,18 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("totalUsers", users.size());
-        model.addAttribute("totalPosts", postService.findAllPosts().size());
+
+        List<Post> posts = postService.findAllPosts();
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPosts", posts.size());
+
         return "admin-dashboard";
     }
 
     @GetMapping("/{id}/edit")
     public String editUserForm(@PathVariable Long id, Model model) {
         Optional<User> userOpt = userService.findUserById(id);
-        
+
         if (userOpt.isPresent()) {
             model.addAttribute("user", userOpt.get());
             return "user-edit";
@@ -84,11 +89,11 @@ public class UserController {
     @PostMapping("/{id}/edit")
     public String updateUser(@PathVariable Long id, @ModelAttribute User user, RedirectAttributes redirectAttributes) {
         Optional<User> existingUserOpt = userService.findUserById(id);
-        
+
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
             existingUser.setName(user.getName());
-            
+
             // Only update email if it's changed and not already taken
             if (!existingUser.getEmail().equals(user.getEmail())) {
                 if (userService.existsByEmail(user.getEmail())) {
@@ -97,12 +102,12 @@ public class UserController {
                 }
                 existingUser.setEmail(user.getEmail());
             }
-            
+
             // Only admin can change admin status
             if (user.isAdmin()) {
                 existingUser.setAdmin(true);
             }
-            
+
             userService.saveUser(existingUser);
             redirectAttributes.addFlashAttribute("success", "Profile updated successfully");
             return "redirect:/users/dashboard/" + id;
@@ -114,6 +119,24 @@ public class UserController {
     @GetMapping("/{id}/delete")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return "redirect:/users/admin";
+    }
+
+    @GetMapping("/admin/{id}/ban")
+    public String banUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        User user = userService.banUser(id, true);
+        if (user != null) {
+            redirectAttributes.addFlashAttribute("success", "User " + user.getName() + " has been banned");
+        }
+        return "redirect:/users/admin";
+    }
+
+    @GetMapping("/admin/{id}/unban")
+    public String unbanUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        User user = userService.banUser(id, false);
+        if (user != null) {
+            redirectAttributes.addFlashAttribute("success", "User " + user.getName() + " has been unbanned");
+        }
         return "redirect:/users/admin";
     }
 }

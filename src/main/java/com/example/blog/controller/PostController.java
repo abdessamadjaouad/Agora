@@ -211,6 +211,33 @@ public class PostController {
         return "redirect:/";
     }
 
+    // Admin endpoint for deleting any post
+    @GetMapping("/admin/{id}/delete")
+    public String adminDeletePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Post> postOpt = postService.findPostById(id);
+
+        if (postOpt.isPresent()) {
+            Post post = postOpt.get();
+
+            // Delete photo if exists
+            if (post.getPhotoPath() != null) {
+                try {
+                    Files.deleteIfExists(uploadPath.resolve(post.getPhotoPath()));
+                } catch (IOException e) {
+                    // Log error but continue with post deletion
+                    System.err.println("Could not delete photo: " + e.getMessage());
+                }
+            }
+
+            postService.deletePost(id);
+            redirectAttributes.addFlashAttribute("success", "Post deleted successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Post not found");
+        }
+
+        return "redirect:/users/admin";
+    }
+
     // Method to serve uploaded files
     @GetMapping("/uploads/{filename:.+}")
     @ResponseBody

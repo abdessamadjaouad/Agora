@@ -54,6 +54,16 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
+    public User banUser(Long id, boolean banned) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setAccountNonLocked(!banned);
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }

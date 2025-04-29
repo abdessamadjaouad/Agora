@@ -46,7 +46,7 @@
                     <p class="lead">Manage users and content of the blog application.</p>
                 </div>
             </div>
-            
+
             <!-- Stats Cards -->
             <div class="row mt-4">
                 <div class="col-md-4">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Users Table -->
             <div class="card mt-4">
                 <div class="card-header">
@@ -84,7 +84,7 @@
                     <div th:if="${#lists.isEmpty(users)}" class="alert alert-info">
                         <p>No users found.</p>
                     </div>
-                    
+
                     <div th:unless="${#lists.isEmpty(users)}" class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -93,6 +93,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
+                                    <th>Status</th>
                                     <th>Joined</th>
                                     <th>Posts</th>
                                     <th>Actions</th>
@@ -107,6 +108,10 @@
                                         <span th:if="${user.admin}" class="badge bg-danger">Admin</span>
                                         <span th:unless="${user.admin}" class="badge bg-secondary">User</span>
                                     </td>
+                                    <td>
+                                        <span th:if="${user.accountNonLocked}" class="badge bg-success">Active</span>
+                                        <span th:unless="${user.accountNonLocked}" class="badge bg-danger">Banned</span>
+                                    </td>
                                     <td th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy')}">01 Jan 2023</td>
                                     <td th:text="${user.posts.size()}">0</td>
                                     <td>
@@ -115,6 +120,58 @@
                                         <a th:unless="${user.admin}" th:href="@{/users/{id}/delete(id=${user.id})}" 
                                            class="btn btn-sm btn-danger"
                                            onclick="return confirm('Are you sure you want to delete this user?')">
+                                            Delete
+                                        </a>
+                                        <a th:if="${user.accountNonLocked && !user.admin}" th:href="@{/users/admin/{id}/ban(id=${user.id})}" 
+                                           class="btn btn-sm btn-warning"
+                                           onclick="return confirm('Are you sure you want to ban this user?')">
+                                            Ban
+                                        </a>
+                                        <a th:unless="${user.accountNonLocked || user.admin}" th:href="@{/users/admin/{id}/unban(id=${user.id})}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Are you sure you want to unban this user?')">
+                                            Unban
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Table -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Posts</h3>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(posts)}" class="alert alert-info">
+                        <p>No posts found.</p>
+                    </div>
+
+                    <div th:unless="${#lists.isEmpty(posts)}" class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="post : ${posts}">
+                                    <td th:text="${post.id}">1</td>
+                                    <td th:text="${post.title}">Post Title</td>
+                                    <td th:text="${post.author.name}">Author Name</td>
+                                    <td th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">01 Jan 2023</td>
+                                    <td>
+                                        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-sm btn-primary">View</a>
+                                        <a th:href="@{/posts/admin/{id}/delete(id=${post.id})}" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this post?')">
                                             Delete
                                         </a>
                                     </td>
